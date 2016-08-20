@@ -262,30 +262,32 @@ class Channels(BaseAPI):
 
 
 class Chat(BaseAPI):
-    def post_message(self, channel, text, username=None, as_user=None,
+    def post_message(self, channel, text=None, username=None, as_user=None,
                      parse=None, link_names=None, attachments=None,
                      unfurl_links=None, unfurl_media=None, icon_url=None,
                      icon_emoji=None):
 
         # Ensure attachments are json encoded
         if attachments:
-            if isinstance(attachments, list):
-                attachments = json.dumps(attachments)
+           if isinstance(attachments, list):
+               attachments = json.dumps(attachments)
 
-        return self.post('chat.postMessage',
-                         data={
-                             'channel': channel,
-                             'text': text,
-                             'username': username,
-                             'as_user': as_user,
-                             'parse': parse,
-                             'link_names': link_names,
-                             'attachments': attachments,
-                             'unfurl_links': unfurl_links,
-                             'unfurl_media': unfurl_media,
-                             'icon_url': icon_url,
-                             'icon_emoji': icon_emoji
-                         })
+        params = {
+                'channel': channel,
+                'text': text,
+                'username': username,
+                'as_user': as_user,
+                'parse': parse,
+                'link_names': link_names,
+                'attachments': attachments,
+                'unfurl_links': unfurl_links,
+                'unfurl_media': unfurl_media,
+                'icon_url': icon_url,
+                'icon_emoji': icon_emoji
+        }
+        params = {k: v for k, v in params.items() if v != None}
+
+        return self.post('chat.postMessage', params=params)
 
     def me_message(self, channel, text):
         return self.post('chat.meMessage',
